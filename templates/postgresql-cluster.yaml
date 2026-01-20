@@ -23,6 +23,8 @@ spec:
     primaryUpdateStrategy: unsupervised
 
     postgresql:
+        pg_ident:
+            - cnpg_streaming_replica streaming-replica.{{ .Release.Namespace }}.svc.cluster.local {{ .Values.global.appName }}-postgresql-streaming-replicata-certificate
         parameters:
             shared_buffers: 512MB
             effective_cache_size: 1GB
@@ -54,7 +56,7 @@ spec:
         serverTLSSecret: {{ .Values.global.appName }}-postgresql-server-certificate-secret
         serverCASecret: {{ .Values.global.appName }}-postgresql-server-certificate-secret
         clientCASecret: {{ .Values.global.appName }}-postgresql-client-certificate-secret
-        replicationTLSSecret: {{ .Values.global.appName }}-postgresql-client-certificate-secret
+        replicationTLSSecret: {{ .Values.global.appName }}-postgresql-streaming-replicata-certificate-secret
 
     storage:
         storageClass: longhorn-strict-local
