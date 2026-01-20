@@ -19,6 +19,7 @@ postgresql:
   
   backupSchedule: "0 0 * * *"
 
+  enableDefaultCertificate: false
   ingresses: []
 
 # ingresses:
