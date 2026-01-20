@@ -2,7 +2,7 @@ global:
   appName: myApp
   environment: prod-d1
 
-postgres:
+postgresql:
   enable: true
 
   imageName: ghcr.io/cloudnative-pg/postgresql:18.1@sha256:b53c340d52ae3c5e980147b2dee775e5a569ad2d4a4447a629bfc9bf048c7768
@@ -19,7 +19,7 @@ postgres:
   
   backupSchedule: "0 0 * * *"
 
-  enableDefaultCertificate: true
+  enableDefaultCertificate: false
   ingresses: []
 
 # ingresses:

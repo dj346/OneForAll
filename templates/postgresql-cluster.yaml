@@ -9,7 +9,7 @@ metadata:
         app.kubernetes.io/instance: {{ .Values.global.appName }}-{{ .Values.global.environment }}
         app.kubernetes.io/managed-by: argocd
 spec:
-    imageName: {{ .Values.postgres.imageName }}
+    imageName: {{ .Values.postgresql.imageName }}
     imagePullPolicy: IfNotPresent
 
     inheritedMetadata:
@@ -37,11 +37,11 @@ spec:
 
     bootstrap:
         initdb:
-            database: {{ default (printf "%sdb" .Values.global.appName) (.Values.postgres.databaseName | trim) }}
-            owner: {{ default (printf "%suser" .Values.global.appName) (.Values.postgres.ownerName | trim) }}
+            database: {{ default (printf "%sdb" .Values.global.appName) (.Values.postgresql.databaseName | trim) }}
+            owner: {{ default (printf "%suser" .Values.global.appName) (.Values.postgresql.ownerName | trim) }}
             secret:
                 name: {{ .Values.global.appName }}-postgresql-credentials-secret
-            {{- with .Values.postgres.postInitSQL }}
+            {{- with .Values.postgresql.postInitSQL }}
             postInitSQL:
             {{ toYaml . | nindent 14 }}
             {{- end }}
@@ -60,11 +60,11 @@ spec:
 
     storage:
         storageClass: longhorn-strict-local
-        size: {{ .Values.postgres.storageSize }}
+        size: {{ .Values.postgresql.storageSize }}
 
     walStorage:
         storageClass: longhorn-strict-local
-        size: {{ .Values.postgres.walStorageSize }}
+        size: {{ .Values.postgresql.walStorageSize }}
 
     backup:
         barmanObjectStore:
