@@ -4,19 +4,19 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ .Values.global.appName }}{{- if $ing.nameSuffix }}-{{ $ing.nameSuffix }}{{- end }}-ingress
-  namespace: {{ .Release.Namespace }}
+  name: {{ $.Values.global.appName }}{{- if $ing.nameSuffix }}-{{ $ing.nameSuffix }}{{- end }}-ingress
+  namespace: {{ $.Release.Namespace }}
   labels:
-    app.kubernetes.io/name: {{ .Values.global.appName }}
+    app.kubernetes.io/name: {{ $.Values.global.appName }}
     app.kubernetes.io/component: networking
-    app.kubernetes.io/instance: {{ .Values.global.appName }}-{{ .Values.global.environment }}
+    app.kubernetes.io/instance: {{ $.Values.global.appName }}-{{ $.Values.global.environment }}
     app.kubernetes.io/managed-by: argocd
   annotations:
     cert-manager.io/cluster-issuer: cloudflare-clusterissuer
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
 spec:
   rules:
-    - host: {{ .Values.global.appName }}{{- if $ing.nameSuffix }}-{{ $ing.nameSuffix }}{{- end }}.kube-prod-d1.mclacken.net
+    - host: {{ $.Values.global.appName }}{{- if $ing.nameSuffix }}-{{ $ing.nameSuffix }}{{- end }}.kube-prod-d1.mclacken.net
       http:
         paths:
           - path: /
@@ -28,7 +28,7 @@ spec:
                   name: {{ $ing.portName }}
   tls:
     - hosts:
-        - {{ .Values.global.appName }}{{- if $ing.nameSuffix }}-{{ $ing.nameSuffix }}{{- end }}.kube-prod-d1.mclacken.net
-      secretName: {{ .Values.global.appName }}{{- if $ing.nameSuffix }}-{{ $ing.nameSuffix }}{{- end }}-ingress-certificate-secret
+        - {{ $.Values.global.appName }}{{- if $ing.nameSuffix }}-{{ $ing.nameSuffix }}{{- end }}.kube-prod-d1.mclacken.net
+      secretName: {{ $.Values.global.appName }}{{- if $ing.nameSuffix }}-{{ $ing.nameSuffix }}{{- end }}-ingress-certificate-secret
 {{- end }}
 {{- end }}
