@@ -39,10 +39,11 @@ spec:
             owner: {{ default (printf "%suser" .Values.global.appName) (.Values.postgres.ownerName | trim) }}
             secret:
                 name: {{ .Values.global.appName }}-postgresql-credentials-secret
-            {{- if .Values.postgres.postInitSQL }}
+            {{- with .Values.postgres.postInitSQL }}
             postInitSQL:
-            {{ toYaml .Values.postgres.postInitSQL | nindent 2 }}
+            {{ toYaml . | nindent 14 }}
             {{- end }}
+
 
         # For recovery scenarios, uncomment below:
         # recovery:
