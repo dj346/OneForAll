@@ -17,4 +17,11 @@ postgres:
   storageSize: 450Mi
   walStorageSize: 1Gi
   
-  BackupSchedule: "0 0 * * *"
+  backupSchedule: "0 0 * * *"
+
+  ingresses: []
+
+# ingresses:
+#   - nameSuffix: ""
+#     serviceName: ""
+#     portName: ""
