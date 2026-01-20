@@ -24,7 +24,7 @@ spec:
 
     postgresql:
         pg_ident:
-            - cnpg_streaming_replica streaming-replica.{{ .Release.Namespace }}.svc.cluster.local {{ .Values.global.appName }}-postgresql-streaming-replicata-certificate
+            - cnpg_streaming_replica {{ .Values.global.appName }}-postgresql-streaming-replicata-certificate streaming_replica
         parameters:
             shared_buffers: 512MB
             effective_cache_size: 1GB
