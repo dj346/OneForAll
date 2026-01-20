@@ -10,6 +10,8 @@ metadata:
     app.kubernetes.io/managed-by: argocd
 spec:
   secretName: {{ .Values.global.appName }}-postgresql-streaming-replicata-certificate-secret
+  usages:
+    - client auth
   issuerRef:
     name: vault-cnpg-kube-prod-d1-issuer
     kind: ClusterIssuer
