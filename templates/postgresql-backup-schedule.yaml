@@ -11,6 +11,6 @@ metadata:
 spec:
   cluster:
     name: {{ .Values.global.appName }}-postgresql-cluster
-  schedule: {{ .Values.postgresql.BackupSchedule }}
+  schedule: {{ .Values.postgresql.backupSchedule }}
   backupOwnerReference: self
   method: barmanObjectStore
