@@ -19,7 +19,7 @@ postgresql:
   
   backupSchedule: "0 0 * * *"
 
-  defaultSecretEnabled: true
+  defaultSecretEnabled: false
   ingresses: []
 #   - nameSuffix: ""
 #     serviceName: ""
