@@ -4,7 +4,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ $.Values.global.appName }}-{{ $svc.nameSuffix }}-service
+  name: {{ $.Values.global.appName }}{{- if $svc.nameSuffix }}-{{ $svc.nameSuffix }}{{- end }}-service
   namespace: {{ $.Values.global.namespace }}
   labels:
     app.kubernetes.io/name: {{ $.Values.global.appName }}
