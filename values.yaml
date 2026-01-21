@@ -1,6 +1,7 @@
 global:
   appName: myApp
   environment: prod-d1
+  defaultSecretEnabled: false
 
 postgresql:
   enable: true
@@ -19,7 +20,6 @@ postgresql:
   
   backupSchedule: "0 0 * * *"
 
-  defaultSecretEnabled: false
   ingresses: []
 #   - nameSuffix: ""
 #     serviceName: ""
