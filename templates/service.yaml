@@ -1,0 +1,24 @@
+{{- if .Values.services }}
+{{- range $i, $svc := .Values.services }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $.Values.global.appName }}-{{ $svc.nameSuffix }}-service
+  namespace: {{ $.Values.global.namespace }}
+  labels:
+    app.kubernetes.io/name: {{ $.Values.global.appName }}
+    app.kubernetes.io/component: networking
+    app.kubernetes.io/instance: {{ $.Values.global.appName }}-{{ $.Values.global.environment }}
+    app.kubernetes.io/managed-by: argocd
+spec:
+  type: ClusterIP
+  ports:
+    - name: {{ $svc.portName }}
+      port:  {{ $svc.port }}
+      targetPort: {{ $svc.portName }}
+      protocol: TCP
+  selector:
+    app.kubernetes.io/name: {{ $.Values.global.appName }}
+{{- end }}
+{{- end }}
