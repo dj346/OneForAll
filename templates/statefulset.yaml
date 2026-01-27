@@ -11,10 +11,11 @@ metadata:
     app.kubernetes.io/instance: {{ $.Values.global.appName }}-{{ $.Values.global.environment }}
     app.kubernetes.io/component: program
     app.kubernetes.io/managed-by: argocd
+    app.kubernetes.io/statefulset: "{{ $.Values.global.appName }}{{- if $sts.nameSuffix }}-{{ $sts.nameSuffix }}{{- end }}"
   annotations:
     reloader.stakater.com/auto: "true"
 spec:
-  serviceName: anisonarr-service
+  serviceName: {{ $.Values.global.appName }}{{- if $sts.nameSuffix }}-{{ $sts.nameSuffix }}{{- end }}-headless-service
   replicas: 1
   selector:
     matchLabels:
@@ -31,11 +32,12 @@ spec:
         app.kubernetes.io/instance: {{ $.Values.global.appName }}-{{ $.Values.global.environment }}
         app.kubernetes.io/component: program
         app.kubernetes.io/managed-by: argocd
+        app.kubernetes.io/statefulset: "{{ $.Values.global.appName }}{{- if $sts.nameSuffix }}-{{ $sts.nameSuffix }}{{- end }}"
     spec:
       {{- if $sts.containers }}
       containers:
       {{- range $j, $container := $sts.containers }}
-        - name: {{ $.Values.global.appName }}{{- if $container.nameSuffix }}-{{ $container.nameSuffix }}{{- end }}
+        - name: {{ $.Values.global.appName }}{{- if $sts.nameSuffix }}-{{ $sts.nameSuffix }}{{- end }}{{- if $container.nameSuffix }}-{{ $container.nameSuffix }}{{- end }}
           image: {{ $container.image }}
           imagePullPolicy: IfNotPresent
 
@@ -54,7 +56,7 @@ spec:
 {{ toYaml $container.ports | nindent 12 }}
           {{- end }}
             
-          {{ - if $container.startupProbeHttpGet }}
+          {{- if $container.startupProbeHttpGet }}
           startupProbe:
             {{- if $container.startupProbeHttpGet }}
             httpGet:
@@ -84,51 +86,45 @@ spec:
             periodSeconds: 10
           {{- end }}
 
-          # resources:
-          #   requests:
-          #     memory: "256Mi"
-          #     cpu: "250m"
-          #   limits:
-          #     memory: "512Mi"
-          #     cpu: "500m"
+          {{- if $container.resources }}
+          resources:
+{{ toYaml $container.resources | nindent 12 }}
+          {{- end }}
 
+          {{- if $container.volumeMounts }}
           volumeMounts:
-            - name: anisonarr-config
-              mountPath: /config
-            - name: data
-              mountPath: /data
+{{ toYaml $container.volumeMounts | nindent 12 }}
+          {{- end }}
+
       {{- end }}
       {{- end }}
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             - labelSelector:
-                matchExpressions:
-                  - key: app.kubernetes.io/name
-                    operator: In
-                    values:
-                      - anisonarr
+                matchLabels:
+                  app.kubernetes.io/name: {{ $.Values.global.appName }}
+                  app.kubernetes.io/instance: {{ $.Values.global.appName }}-{{ $.Values.global.environment }}
+                  app.kubernetes.io/component: program
+                  app.kubernetes.io/managed-by: argocd
               topologyKey: kubernetes.io/hostname
 
-      priorityClassName: low-priority
+    
+      priorityClassName: {{ $.Values.priorityClassName | default "low-priority" }}
 
+      {{- if $sts.statefulsetSecurityContext }}
       securityContext:
-        runAsUser: 0
-        runAsGroup: 0
+{{ toYaml $sts.statefulsetSecurityContext | nindent 8 }}
+      {{- end }}
 
+      {{- if $sts.volumes }}
       volumes:
-        - name: data
-          nfs:
-            server: 10.15.21.5
-            path: /mnt/user/video/
+{{ toYaml $sts.volumes | nindent 8 }}
+      {{- end }}
+
+  {{- if $sts.volumeClaimTemplates }}    
   volumeClaimTemplates:
-    - metadata:
-        name: anisonarr-config
-      spec:
-        accessModes: ["ReadWriteOnce"]
-        storageClassName: longhorn
-        resources:
-          requests:
-            storage: 450Mi
+{{ toYaml $sts.volumeClaimTemplates | nindent 4 }}
+  {{- end }}
 {{- end}}
 {{- end}}
